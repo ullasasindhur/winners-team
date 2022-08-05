@@ -94,15 +94,11 @@ class insert_record(BaseModel):
     uniqueId: int
     drugName: str
     condition: str
-    review: str
     rating: int
-    date: str
-    usefulCount: int
     age: int
     gender: str
     region: str
-    year: int
-    recovery_rate: float
+    date: str
 
 
 @app.get("/")
@@ -152,5 +148,9 @@ def predict(data: train_body):
 
 @app.post("/create-record", status_code=status.HTTP_201_CREATED)
 def predict(data: insert_record):
+    year = data.date.split("/")[-1]
+    recovery_rate = data.rating*10
+    collection.insert_one({"uniqueId": data.uniqueId, "year": year, "recovery_rate": recovery_rate, "drugName": data.drugName,
+                          "condition": data.condition, "rating": data.rating, "age": data.age, "gender": data.gender, "region": data.region})
     model_train()
-    return {"result": data}
+    return {"result": "Record Added Successfully"}
