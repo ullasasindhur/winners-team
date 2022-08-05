@@ -13,6 +13,19 @@ from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.tree import DecisionTreeClassifier
 import pandas as pd
 import numpy as np
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI()
+
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 load_dotenv(find_dotenv())
@@ -81,7 +94,6 @@ def model_train():
 
 
 model_train()
-app = FastAPI()
 
 
 class train_body(BaseModel):
