@@ -91,7 +91,7 @@ class train_body(BaseModel):
 
 
 class insert_record(BaseModel):
-    uniqueId: int
+    uniqueID: int
     drugName: str
     condition: str
     rating: int
@@ -150,7 +150,7 @@ def predict(data: train_body):
 def predict(data: insert_record):
     year = data.date.split("/")[-1]
     recovery_rate = data.rating*10
-    collection.insert_one({"uniqueId": data.uniqueId, "year": year, "recovery_rate": recovery_rate, "drugName": data.drugName,
+    collection.insert_one({"uniqueID": data.uniqueID, "year": year, "recovery_rate": recovery_rate, "drugName": data.drugName,
                           "condition": data.condition, "rating": data.rating, "age": data.age, "gender": data.gender, "region": data.region})
     model_train()
     return {"result": "Record Added Successfully"}
