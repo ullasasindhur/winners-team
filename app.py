@@ -162,5 +162,4 @@ def create_record(data: insert_record):
     recovery_rate = data.rating*10
     collection.insert_one({"uniqueID": data.uniqueID, "year": year, "recovery_rate": recovery_rate, "drugName": data.drugName,
                           "condition": data.condition, "rating": data.rating, "age": data.age, "gender": data.gender, "region": data.region})
-    model_train()
     return {"result": "Record Added Successfully"}
