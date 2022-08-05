@@ -4,7 +4,6 @@ from pymongo import MongoClient
 from dotenv import load_dotenv, find_dotenv
 import os
 import pandas as pd
-from typing import Optional
 from sklearn.preprocessing import LabelEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
@@ -99,7 +98,6 @@ model_train()
 class train_body(BaseModel):
     condition: str
     age: int
-    recovery_rate: Optional[int] = 50
 
 
 class insert_record(BaseModel):
@@ -119,25 +117,25 @@ def root():
 
 
 @app.get("/conditions")
-def read_course():
+def patient_conditions():
     return collection.distinct("condition")
 
 
 @app.get("/drug-items")
-def read_item(drug: str):
+def drug_items(drug: str):
     elements = collection.find({"drugName": drug}, projection={
         '_id': False, 'age': True, 'gender': True, 'region': True, 'recovery_rate': True})
     return list(elements)
 
 
 @app.get("/generate-id")
-def read_item():
+def generate_id():
     elements = collection.count_documents({})
     return elements+1
 
 
 @app.get("/year-items")
-def read_item(year: int):
+def year_items(year: int):
     elements = list(collection.find({"year": year}, projection={'_id': False}))
     return elements
 
@@ -159,7 +157,7 @@ def predict(data: train_body):
 
 
 @app.post("/create-record", status_code=status.HTTP_201_CREATED)
-def predict(data: insert_record):
+def create_record(data: insert_record):
     year = data.date.split("/")[-1]
     recovery_rate = data.rating*10
     collection.insert_one({"uniqueID": data.uniqueID, "year": year, "recovery_rate": recovery_rate, "drugName": data.drugName,
